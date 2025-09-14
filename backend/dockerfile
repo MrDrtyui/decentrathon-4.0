@@ -1,0 +1,12 @@
+FROM oven/bun:1
+
+WORKDIR /app
+
+COPY bun.lock package.json ./
+RUN bun install --frozen-lockfile --production
+
+COPY . .
+
+RUN bun run build
+
+CMD ["bun", "run", "start:prod"]

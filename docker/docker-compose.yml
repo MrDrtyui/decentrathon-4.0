@@ -1,0 +1,28 @@
+version: "3.9"
+
+services:
+  ml:
+    build:
+      context: ../ml
+      dockerfile: dockerfile
+    container_name: car-ml
+    ports:
+      - "8000:8000"
+    environment:
+      - ROBOFLOW_API_KEY=PYM6AH4eiFV0GfesWGvH
+    restart: unless-stopped
+
+  backend:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile
+    container_name: car-backend
+    ports:
+      - "3000:3000"
+    volumes:
+      # 👇 Пробрасываем папку public наружу,
+      # чтобы картинки сохранялись и на хостовой машине
+      - ../backend/public:/app/public
+    depends_on:
+      - ml
+    restart: unless-stopped
